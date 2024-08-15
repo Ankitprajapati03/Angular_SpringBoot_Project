@@ -75,10 +75,6 @@ html {
     margin: auto;
 }
 
-.navbar input[type="checkbox"] {
-    display: none;
-}
-
 .logo {
     flex: 1;
 }
@@ -116,7 +112,7 @@ html {
 }
 
 .menu-items a:hover {
-    color: #117964;
+    color: orange;
 }
 
 @media (max-width: 768px) {
