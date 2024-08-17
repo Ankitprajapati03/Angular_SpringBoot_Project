@@ -14,35 +14,36 @@
 <div class="container">
   <div class="form-box">
     <!-- Registration Form Section -->
-    <form id="registrationForm" onsubmit="validateForm(event)">
+    <form id="registrationForm" (ngSubmit)="onRegister()" #registrationForm="ngForm">
       <div class="logo">Registration <span>Form</span></div>
 
       <!-- Name Input -->
       <div class="input-box">
-        <input type="text" id="name" name="name" placeholder="Enter Your Name">
+        <input type="text" id="name" name="name" [(ngModel)]="registrationObj.name" placeholder="Enter Your Name" #name="ngModel" required>
         <label for="name">Name</label>
-        <div class="invalid-feedback" id="nameError"></div>
+        <div class="invalid-feedback" *ngIf="name.invalid && (name.dirty || name.touched)">Name is required</div>
       </div>
 
       <!-- Age Input -->
       <div class="input-box">
-        <input type="number" placeholder="Enter Your Age">
-        <label>Age</label>
+        <input type="number" id="age" name="age" [(ngModel)]="registrationObj.age" placeholder="Enter Your Age" #age="ngModel" required>
+        <label for="age">Age</label>
+        <div class="invalid-feedback" *ngIf="age.invalid && (age.dirty || age.touched)">Age is required</div>
       </div>
 
       <!-- Gender Selection -->
       <div class="input-box">
         <div class="radio-group">
           <span style="margin-left: 1px;">
-            <input type="radio" id="gender-male" name="gender" value="male">
+            <input type="radio" id="gender-male" name="gender" value="male" [(ngModel)]="registrationObj.gender" #gender="ngModel" required>
             <label for="gender-male">Male</label>
           </span>
           <span style="margin-left: 25px;">
-            <input type="radio" id="gender-female" name="gender" value="female">
+            <input type="radio" id="gender-female" name="gender" value="female" [(ngModel)]="registrationObj.gender">
             <label for="gender-female">Female</label>
           </span>
           <span style="margin-left: 25px;">
-            <input type="radio" id="gender-other" name="gender" value="other">
+            <input type="radio" id="gender-other" name="gender" value="other" [(ngModel)]="registrationObj.gender">
             <label for="gender-other">Other</label>
           </span>
         </div>
@@ -51,43 +52,47 @@
 
       <!-- Roll Number Input -->
       <div class="input-box">
-        <input type="text" placeholder="Enter Roll Number">
-        <label>Roll Number</label>
+        <input type="text" id="rollNumber" name="rollNumber" [(ngModel)]="registrationObj.rollNumber" placeholder="Enter Roll Number" #rollNumber="ngModel" required>
+        <label for="rollNumber">Roll Number</label>
+        <div class="invalid-feedback" *ngIf="rollNumber.invalid && (rollNumber.dirty || rollNumber.touched)">Roll Number is required</div>
       </div>
 
       <!-- Course Selection -->
       <div class="input-box">
-        <select id="courseSelect" onchange="populateStreams()">
+        <select id="courseSelect" name="course" [(ngModel)]="registrationObj.course" #course="ngModel" (change)="populateStreams()" required>
           <option value="" disabled selected>Choose Your Course</option>
           <option value="BA">Bachelor of Arts</option>
           <option value="BSc">Bachelor of Science</option>
           <option value="BCom">Bachelor of Commerce</option>
-          <option value="BTech">Bachelor of Technology</option>
           <option value="BBA">Bachelor of Business Administration</option>
           <option value="BCA">Bachelor of Computer Applications</option>
-          <option value="LLB">Bachelor of Law</option>
+          <option value="BTech">Bachelor of Technology</option>
         </select>
         <label>Course</label>
       </div>
 
       <!-- Stream Selection -->
-      <div class="input-box" id="streamBox" style="display:none;">
-        <select id="streamSelect">
+      <div class="input-box" id="streamBox" *ngIf="streams.length > 0">
+        <select id="streamSelect" name="stream" [(ngModel)]="registrationObj.stream" #stream="ngModel" required>
           <option value="" disabled selected>Choose Your Stream</option>
+          <option *ngFor="let stream of streams" [value]="stream">{{ stream }}</option>
         </select>
         <label>Stream</label>
       </div>
 
       <!-- Semester Selection -->
       <div class="input-box">
-        <select>
+        <select name="semester" [(ngModel)]="registrationObj.semester" #semester="ngModel" required>
           <option value="" disabled selected>Choose Your Semester</option>
           <option value="sem1">Semester 1</option>
-          <option value="sem2">Semester 2</option>
-          <option value="sem3">Semester 3</option>
-          <option value="sem4">Semester 4</option>
-          <option value="sem5">Semester 5</option>
-          <option value="sem6">Semester 6</option>
+          <option value="sem1">Semester 2</option>
+          <option value="sem1">Semester 3</option>
+          <option value="sem1">Semester 4</option>
+          <option value="sem1">Semester 5</option>
+          <option value="sem1">Semester 6</option>
+          <option value="sem1">Semester 7</option>
+          <option value="sem1">Semester 8</option>
+
         </select>
         <label>Semester</label>
       </div>
@@ -95,120 +100,19 @@
       <!-- Student Photo Upload -->
       <div class="input-box">
         <label for="student-photo">Student Photo</label>
-        <input type="file" id="student-photo">
+        <input type="file" id="student-photo" (change)="onFileSelect($event, 'studentPhoto')" required>
       </div>
 
       <!-- Additional Document Upload -->
       <div class="input-box">
         <label for="additional-doc">Additional Document</label>
-        <input type="file" id="additional-doc">
+        <input type="file" id="additional-doc" (change)="onFileSelect($event, 'additionalDocument')" required>
       </div>
 
       <!-- Submit Button -->
-      <button class="btn" (click)="openRegister()">Submit</button>
+      <button class="btn" type="submit" [disabled]="!registrationForm.form.valid">Submit</button>
     </form>
   </div>
 </div>
-
-<!-- Javascript conditions to control course and stream field -->
-<script>
-  function populateStreams() {
-    var courseSelect = document.getElementById("courseSelect");
-    var streamBox = document.getElementById("streamBox");
-    var streamSelect = document.getElementById("streamSelect");
-
-    streamSelect.innerHTML = '<option value="" disabled selected>Choose Your Stream</option>';
-
-    var selectedCourse = courseSelect.value;
-
-    // streams for elected course
-    if (selectedCourse === "BA") {
-      streamSelect.innerHTML += `
-        <option value="English">English</option>
-        <option value="History">History</option>
-        <option value="Political Science">Political Science</option>
-        <option value="Economics">Economics</option>
-        <option value="Sociology">Sociology</option>
-        <option value="Psychology">Psychology</option>
-        <option value="Geography">Geography</option>
-        <option value="Philosophy">Philosophy</option>
-        <option value="Fine Arts">Fine Arts</option>
-        <option value="Languages">Languages</option>
-      `;
-    } else if (selectedCourse === "BSc") {
-      streamSelect.innerHTML += `
-        <option value="Physics">Physics</option>
-        <option value="Chemistry">Chemistry</option>
-        <option value="Biology">Biology</option>
-        <option value="Mathematics">Mathematics</option>
-        <option value="Computer Science">Computer Science</option>
-        <option value="Statistics">Statistics</option>
-        <option value="Zoology">Zoology</option>
-        <option value="Botany">Botany</option>
-        <option value="Environmental Science">Environmental Science</option>
-      `;
-    } else if (selectedCourse === "BCom") {
-      streamSelect.innerHTML += `
-        <option value="General">General</option>
-        <option value="Accountancy">Accountancy</option>
-        <option value="Finance">Finance</option>
-        <option value="Marketing">Marketing</option>
-        <option value="Economics">Economics</option>
-        <option value="Management">Management</option>
-        <option value="Taxation">Taxation</option>
-        <option value="Banking">Banking</option>
-        <option value="Insurance">Insurance</option>
-      `;
-    } else if (selectedCourse === "BTech") {
-      streamSelect.innerHTML += `
-        <option value="Computer Engineering">Computer Engineering</option>
-        <option value="Electrical Engineering">Electrical Engineering</option>
-        <option value="Mechanical Engineering">Mechanical Engineering</option>
-        <option value="Civil Engineering">Civil Engineering</option>
-        <option value="Electronics & Communication">Electronics & Communication</option>
-        <option value="Information Technology">Information Technology</option>
-        <option value="Aeronautical Engineering">Aeronautical Engineering</option>
-        <option value="Biotechnology">Biotechnology</option>
-        <option value="Chemical Engineering">Chemical Engineering</option>
-      `;
-    } else if (selectedCourse === "BBA") {
-      streamSelect.innerHTML += `
-        <option value="General">General</option>
-        <option value="Marketing">Marketing</option>
-        <option value="Finance">Finance</option>
-        <option value="Human Resource Management">Human Resource Management</option>
-        <option value="International Business">International Business</option>
-        <option value="Operations Management">Operations Management</option>
-        <option value="Entrepreneurship">Entrepreneurship</option>
-        <option value="Retail Management">Retail Management</option>
-      `;
-    } else if (selectedCourse === "BCA") {
-      streamSelect.innerHTML += `
-        <option value="General">General</option>
-        <option value="Computer Applications">Computer Applications</option>
-        <option value="Cloud Computing">Cloud Computing</option>
-        <option value="Mobile Applications">Mobile Applications</option>
-        <option value="Web Development">Web Development</option>
-        <option value="Database Management">Database Management</option>
-        <option value="Networking">Networking</option>
-        <option value="Cyber Security">Cyber Security</option>
-        <option value="Software Testing">Software Testing</option>
-      `;
-    } else if (selectedCourse === "LLB") {
-      streamSelect.innerHTML += `
-        <option value="General">General</option>
-        <option value="Corporate Law">Corporate Law</option>
-        <option value="Criminal Law">Criminal Law</option>
-        <option value="Constitutional Law">Constitutional Law</option>
-        <option value="Family Law">Family Law</option>
-        <option value="Intellectual Property Law">Intellectual Property Law</option>
-        <option value="Labour Law">Labour Law</option>
-        <option value="Tax Law">Tax Law</option>
-        <option value="Environmental Law">Environmental Law</option>
-      `;
-    }
-    streamBox.style.display = "block";
-  }
-</script>
 </body>
 </html>

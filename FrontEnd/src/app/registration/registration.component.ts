@@ -1,8 +1,6 @@
 import { HttpClient } from '@angular/common/http';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
 
 @Component({
   selector: 'app-registration',
@@ -11,33 +9,73 @@ import { of } from 'rxjs';
 })
 export class RegistrationComponent {
 
+  // Initializing the registration object
   registrationObj: any = {
     "registrationId": 0,
-    "name": "",
-    "age": 0,
-    "gender": "",
     "rollNumber": "",
-    "cource": "",
+    "name": "",
+    "age": null,
+    "gender": "",
+    "course": "",
     "semester": "",
-    "studentPhoto": "",
-    "addtionalDocument": "",
+    "stream": "",
+    "studentPhoto": null,
+    "additionalDocument": null
+  };
+
+  // Array to store streams based on selected course
+  streams: string[] = [];
+
+  // Injecting HttpClient service
+  constructor(private http: HttpClient) { }
+
+  onRegister() {
+    this.http.post("http://localhost:8080/POST/api/students", this.registrationObj).subscribe(
+      (res: any) => {
+        if (res.result) {
+          alert("Registration Successful");
+        } else {
+          alert(res.message);
+        }
+      },
+      (error) => {
+        alert("An error occurred while registering. Please try again.");
+        console.error("API call error:", error);
+      }
+    );
   }
 
-  constructor(private router: Router, private http: HttpClient) { }
+  // Function to populate streams based on selected course
+  populateStreams() {
+    const course = this.registrationObj.course;
 
-  openLogin() {
-    this.router.navigate(['/login']);
+    if (course === 'BA') {
+      this.streams = ['History', 'Political Science', 'Psychology'];
+    } else if (course === 'BSc') {
+      this.streams = ['Physics', 'Chemistry', 'Biology'];
+    } else if (course === 'BCom') {
+      this.streams = ['Accounting', 'Finance', 'Marketing'];
+    } else if (course === 'BBA') {
+      this.streams = ['Human Resources', 'International Business', 'Marketing'];
+    } else if (course === 'BCA') {
+      this.streams = ['Software Development', 'Network Security', 'Data Science'];
+    } else if (course === 'BTech') {
+      this.streams = ['Computer Science', 'Mechanical', 'Civil', 'Electrical'];
+    } else {
+      this.streams = []; // Clear streams if no course selected
+    }
+
+    // Reset stream selection if course changes
+    this.registrationObj.stream = '';
   }
 
-  openRegister() {
-    this.http.post("http://localhost:8080/POST/api/students", this.registrationObj).pipe(
-      catchError(error => {
-        console.error('Error occurred:', error);
-        return of(null);
-      })
-    )
-    .subscribe(response => {
-      console.log('Response received:', response);
-    });
+  // Function to handle file selection
+  onFileSelect(event: any, fileType: string) {
+    const file = event.target.files[0];
+    if (fileType === 'studentPhoto') {
+      this.registrationObj.studentPhoto = file;
+    } else if (fileType === 'additionalDocument') {
+      this.registrationObj.additionalDocument = file;
+    }
   }
 }
