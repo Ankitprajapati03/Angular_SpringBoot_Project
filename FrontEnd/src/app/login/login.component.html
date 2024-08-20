@@ -6,26 +6,87 @@
   <title>Teacher Login Page</title>
 </head>
 <body>
-<!-- Login Form Section-->
-<div class="l-form">
-  <form action="" class="form">
-    <div class="logo">Teacher LogIn <span>Page</span></div>
+<div class="container">
+  <h1>Student Records</h1>
 
-    <!-- Email field-->
-    <div class="form__div">
-      <label class="form__label">Email</label>
-      <input type="text" class="form__input" placeholder="Enter Email">
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <input type="text" placeholder="Search by Roll Number" [(ngModel)]="searchRollNumber" />
+    <button (click)="filterStudents()">Search</button>
+  </div>
+
+  <!-- Display Student Records -->
+  <div *ngFor="let student of filteredStudents" class="student-card">
+    <div class="student-info">
+      <img [src]="student.studentPhotoUrl" alt="Student Photo" />
+      <div class="info">
+
+        <p><strong> Name: </strong> {{ student.name }}</p>
+        <p><strong>Age: </strong> {{ student.age }}</p>
+        <p><strong>Gender: </strong> {{ student.gender }}</p>
+        <p><strong>Course: </strong> {{ student.course }}</p>
+        <p><strong>Stream: </strong> {{ student.stream }}</p>
+        <p><strong>Semester: </strong> {{ student.semester }}</p>
+        <p><strong>Roll Number: </strong> {{ student.rollNumber }}</p>
+      </div>
     </div>
 
-    <!-- Password field-->
-    <div class="form__div">
-      <label class="form__label">Password</label>
-      <input type="password" class="form__input" placeholder="Enter Password">
+    <!-- Action Buttons -->
+    <div class="actions">
+      <button (click)="editStudent(student)">Update</button>
+      <button (click)="deleteStudent(student.rollNumber)">Delete</button>
     </div>
+  </div>
 
-    <!-- Submit Button -->
-    <input type="submit" class="form__button" value="LogIn">
-  </form>
+  <!-- Edit Form (Displayed when editing) -->
+  <div *ngIf="isEditing" class="edit-form">
+    <h2>Edit Student Details</h2>
+    <form (ngSubmit)="saveStudent()">
+      <label>Name:</label>
+      <input type="text" [(ngModel)]="selectedStudent.name" name="name" required />
+
+      <label>Age:</label>
+      <input type="number" [(ngModel)]="selectedStudent.age" name="age" required />
+
+      <label>Gender:</label>
+      <input type="radio" [(ngModel)]="selectedStudent.gender" name="gender" value="Male" /> Male
+      <input type="radio" [(ngModel)]="selectedStudent.gender" name="gender" value="Female" /> Female
+      <input type="radio" [(ngModel)]="selectedStudent.gender" name="gender" value="Other" /> Other
+
+      <label>Course:</label>
+      <select [(ngModel)]="selectedStudent.course" name="course" (change)="populateStreams()">
+        <option value="BA">Bachelor of Arts</option>
+        <option value="BSc">Bachelor of Science</option>
+        <option value="BCom">Bachelor of Commerce</option>
+        <option value="BBA">Bachelor of Business Administration</option>
+        <option value="BCA">Bachelor of Computer Applications</option>
+        <option value="BTech">Bachelor of Technology</option>
+      </select>
+
+      <label>Stream:</label>
+      <select [(ngModel)]="selectedStudent.stream" name="stream" required>
+        <option *ngFor="let stream of streams" [value]="stream">{{ stream }}</option>
+      </select>
+
+      <label>Semester:</label>
+      <select [(ngModel)]="selectedStudent.semester" name="semester" required>
+        <option value="Semester 1">Semester 1</option>
+        <option value="Semester 2">Semester 2</option>
+        <option value="Semester 3">Semester 3</option>
+        <option value="Semester 4">Semester 4</option>
+        <option value="Semester 5">Semester 5</option>
+        <option value="Semester 6">Semester 6</option>
+        <option value="Semester 7">Semester 7</option>
+        <option value="Semester 8">Semester 8</option>
+      </select>
+
+      <div class="form-actions">
+        <button type="button" (click)="discardChanges()">Discard</button>
+        <button type="submit">Save</button>
+      </div>
+    </form>
+  </div>
 </div>
+
 </body>
 </html>
