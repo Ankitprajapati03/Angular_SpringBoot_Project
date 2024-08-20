@@ -1,5 +1,4 @@
 import { HttpClient } from '@angular/common/http';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component } from '@angular/core';
 
 @Component({
@@ -8,8 +7,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent {
-
-  // Initializing the registration object
   registrationObj: any = {
     "registrationId": 0,
     "rollNumber": "",
@@ -19,36 +16,44 @@ export class RegistrationComponent {
     "course": "",
     "semester": "",
     "stream": "",
-    "studentPhoto": null,
-    "additionalDocument": null
+    "studentPhoto": null as File | null,
+    "additionalDocument": null as File | null
   };
 
-  // Array to store streams based on selected course
   streams: string[] = [];
+  studentPhoto: File | null = null;
+  additionalDocument: File | null = null;
 
-  // Injecting HttpClient service
   constructor(private http: HttpClient) { }
 
   onRegister() {
-    this.http.post("http://localhost:8080/POST/api/students", this.registrationObj).subscribe(
+    const formData: FormData = new FormData();
+    formData.append('name', this.registrationObj.name);
+    formData.append('age', this.registrationObj.age?.toString() || '');
+    formData.append('gender', this.registrationObj.gender);
+    formData.append('rollNumber', this.registrationObj.rollNumber);
+    formData.append('course', this.registrationObj.course);
+    formData.append('semester', this.registrationObj.semester.toString());
+    formData.append('stream', this.registrationObj.stream);
+    if (this.studentPhoto) {
+      formData.append('studentPhoto', this.studentPhoto, this.studentPhoto.name);
+    }
+    if (this.additionalDocument) {
+      formData.append('additionalDocument', this.additionalDocument, this.additionalDocument.name);
+    }
+    this.http.post("http://localhost:8080/api/students", formData).subscribe(
       (res: any) => {
-        if (res.result) {
-          alert("Registration Successful");
-        } else {
-          alert(res.message);
-        }
+        alert("Registration Successful");
       },
       (error) => {
-        alert("An error occurred while registering. Please try again.");
+        alert("An error occurred while registering.");
         console.error("API call error:", error);
       }
     );
   }
 
-  // Function to populate streams based on selected course
   populateStreams() {
     const course = this.registrationObj.course;
-
     if (course === 'BA') {
       this.streams = ['History', 'Political Science', 'Psychology'];
     } else if (course === 'BSc') {
@@ -62,20 +67,17 @@ export class RegistrationComponent {
     } else if (course === 'BTech') {
       this.streams = ['Computer Science', 'Mechanical', 'Civil', 'Electrical'];
     } else {
-      this.streams = []; // Clear streams if no course selected
+      this.streams = [];
     }
-
-    // Reset stream selection if course changes
     this.registrationObj.stream = '';
   }
 
-  // Function to handle file selection
   onFileSelect(event: any, fileType: string) {
     const file = event.target.files[0];
     if (fileType === 'studentPhoto') {
-      this.registrationObj.studentPhoto = file;
+      this.studentPhoto = file;
     } else if (fileType === 'additionalDocument') {
-      this.registrationObj.additionalDocument = file;
+      this.additionalDocument = file;
     }
   }
 }

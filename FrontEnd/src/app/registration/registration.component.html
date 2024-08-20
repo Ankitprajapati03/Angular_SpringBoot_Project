@@ -35,15 +35,15 @@
       <div class="input-box">
         <div class="radio-group">
           <span style="margin-left: 1px;">
-            <input type="radio" id="gender-male" name="gender" value="male" [(ngModel)]="registrationObj.gender" #gender="ngModel" required>
+            <input type="radio" id="gender-male" name="gender" value="Male" [(ngModel)]="registrationObj.gender" #gender="ngModel" required>
             <label for="gender-male">Male</label>
           </span>
           <span style="margin-left: 25px;">
-            <input type="radio" id="gender-female" name="gender" value="female" [(ngModel)]="registrationObj.gender">
+            <input type="radio" id="gender-female" name="gender" value="Female" [(ngModel)]="registrationObj.gender">
             <label for="gender-female">Female</label>
           </span>
           <span style="margin-left: 25px;">
-            <input type="radio" id="gender-other" name="gender" value="other" [(ngModel)]="registrationObj.gender">
+            <input type="radio" id="gender-other" name="gender" value="Other" [(ngModel)]="registrationObj.gender">
             <label for="gender-other">Other</label>
           </span>
         </div>
@@ -84,14 +84,14 @@
       <div class="input-box">
         <select name="semester" [(ngModel)]="registrationObj.semester" #semester="ngModel" required>
           <option value="" disabled selected>Choose Your Semester</option>
-          <option value="sem1">Semester 1</option>
-          <option value="sem1">Semester 2</option>
-          <option value="sem1">Semester 3</option>
-          <option value="sem1">Semester 4</option>
-          <option value="sem1">Semester 5</option>
-          <option value="sem1">Semester 6</option>
-          <option value="sem1">Semester 7</option>
-          <option value="sem1">Semester 8</option>
+          <option value="Semester 1">Semester 1</option>
+          <option value="Semester 2">Semester 2</option>
+          <option value="Semester 3">Semester 3</option>
+          <option value="Semester 4">Semester 4</option>
+          <option value="Semester 5">Semester 5</option>
+          <option value="Semester 6">Semester 6</option>
+          <option value="Semester 7">Semester 7</option>
+          <option value="Semester 8">Semester 8</option>
 
         </select>
         <label>Semester</label>

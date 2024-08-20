@@ -13,18 +13,20 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentEntity {
-   @Id
-   @GeneratedValue(strategy= GenerationType.AUTO)
+ @Id
+ @GeneratedValue(strategy = GenerationType.AUTO)
+ private Long id;
+ private String name;
+ private Integer age;
+ private String gender;
+ private String rollNumber;
+ private String course;
+ private String semester;
+ private String stream;
 
-   private Long id;
-    private String name;
-    private Double age;
-    private String gender;
-    private String course;
-    private Integer semester;
-    private String stream;
+ @Column(name = "studentPhoto")
+ private String studentPhoto;
 
-    @Lob
-    @Column(name = "photo", columnDefinition = "BLOB")
-    private byte[] photo;
+ @Column(name = "additionalDocument")
+ private String additionalDocument;
 }

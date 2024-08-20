@@ -15,12 +15,12 @@ import java.time.LocalDate;
 public class StudentDTO {
     private Long id;
     private String name;
-    private Double age;
+    private Integer age;
     private String gender;
+    private String rollNumber;
     private String course;
-    private Integer semester;
+    private String semester;
     private String stream;
-    @Lob
-    @Column(name = "photo", columnDefinition = "BLOB")
-    private byte[] photo;
+    private String studentPhoto;
+    private String additionalDocument;
 }
