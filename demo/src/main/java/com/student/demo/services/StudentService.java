@@ -87,23 +87,11 @@ public class StudentService {
                 .collect(Collectors.toList());
     }
 
-    public boolean deleteStudentById(Long id) {
-        Optional<StudentEntity> studentOpt = studentRepository.findById(id);
-        if (studentOpt.isPresent()) {
-            StudentEntity studentEntity = studentOpt.get();
 
-            try {
-                if (studentEntity.getStudentPhoto() != null) {
-                    Files.deleteIfExists(Paths.get(studentEntity.getStudentPhoto()));
-                }
-                if (studentEntity.getAdditionalDocument() != null) {
-                    Files.deleteIfExists(Paths.get(studentEntity.getAdditionalDocument()));
-                }
-                studentRepository.deleteById(id);
-                return true;
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to delete student files", e);
-            }
+    public void deleteStudentByRollNumber(String rollNumber) {
+        Optional<StudentEntity> studentEntity = studentRepository.findByRollNumber(rollNumber);
+        if (studentEntity.isPresent()) {
+            studentRepository.delete(studentEntity.get());
         } else {
             throw new RuntimeException("Student not found");
         }

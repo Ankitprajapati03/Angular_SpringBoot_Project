@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.loadStudents();
   }
-
+// Student data loading logic
   loadStudents() {
     this.http.get<Student[]>(this.apiUrl).subscribe(
       (response: Student[]) => {
@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
       }
     );
   }
-
+// Filter student record on the basis of rollNumber
   filterStudents() {
     if (this.searchRollNumber) {
       this.filteredStudents = this.students.filter(student =>
@@ -65,13 +65,13 @@ export class LoginComponent implements OnInit {
       this.filteredStudents = this.students;
     }
   }
-
+// Edit student record
   editStudent(student: Student) {
     this.selectedStudent = { ...student };
     this.isEditing = true;
     this.populateStreams();
   }
-
+// Student updated record saving logic
   saveStudent() {
     const updatedStudent = { ...this.selectedStudent };
     this.http.put(`${this.apiUrl}/${updatedStudent.rollNumber}`, updatedStudent).subscribe(
@@ -85,19 +85,23 @@ export class LoginComponent implements OnInit {
       }
     );
   }
-
+// Student record deletion logic
   deleteStudent(rollNumber: string) {
-    this.http.delete(`${this.apiUrl}/${rollNumber}`).subscribe(
-      () => {
-        this.loadStudents();
-        alert('Student deleted successfully');
-      },
-      (error) => {
-        console.error('Error deleting student:', error);
-      }
-    );
+    const confirmed = window.confirm('Are you sure you want to delete this student record?');
+    if (confirmed) {
+      this.http.delete(`${this.apiUrl}/${rollNumber}`).subscribe(
+        response => {
+          window.alert('Student record deleted successfully!!');
+          this.loadStudents();
+        },
+        error => {
+          console.error('Error deleting student:', error);
+          window.alert('Failed to delete student record');
+        }
+      );
+    }
   }
-
+// Updating student record when discarded
   discardChanges() {
     this.isEditing = false;
     this.selectedStudent = {
@@ -111,7 +115,7 @@ export class LoginComponent implements OnInit {
       studentPhotoUrl: ''
     };
   }
-
+// Stream list on update button click
   populateStreams() {
     const course = this.selectedStudent.course;
     if (course === 'BA') {

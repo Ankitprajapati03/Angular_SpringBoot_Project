@@ -90,7 +90,7 @@ export class RegistrationComponent {
     if (!this.registrationObj.name || !this.registrationObj.age || !this.registrationObj.gender || !this.registrationObj.rollNumber ||
         !this.registrationObj.course || !this.registrationObj.semester || !this.registrationObj.stream ||
         !this.studentPhoto || !this.additionalDocument) {
-      alert('Please fill out all required fields.');
+      window.alert('Please fill out all required fields.');
       return false;
     }
     return true;

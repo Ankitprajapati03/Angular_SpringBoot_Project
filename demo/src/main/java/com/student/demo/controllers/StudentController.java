@@ -2,6 +2,8 @@ package com.student.demo.controllers;
 
 import com.student.demo.dto.StudentDTO;
 import com.student.demo.services.StudentService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,9 +54,14 @@ public class StudentController {
         return studentService.getStudentById(studentId);
     }
 
-    @DeleteMapping("/{id}")
-    public boolean deleteStudentById(@PathVariable Long id) {
-        return studentService.deleteStudentById(id);
+    @DeleteMapping("/{rollNumber}")
+    public ResponseEntity<Void> deleteStudent(@PathVariable String rollNumber) {
+        try {
+            studentService.deleteStudentByRollNumber(rollNumber);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping("/{id}")
