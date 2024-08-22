@@ -115,7 +115,7 @@ export class LoginComponent implements OnInit {
       studentPhotoUrl: ''
     };
   }
-// Stream list on update button click
+// Populate stream list on update button click
   populateStreams() {
     const course = this.selectedStudent.course;
     if (course === 'BA') {
