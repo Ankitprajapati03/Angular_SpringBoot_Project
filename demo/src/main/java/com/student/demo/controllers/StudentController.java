@@ -48,8 +48,8 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public StudentDTO getStudentId(@PathVariable("id") Long studentId) {
-        return studentService.getStudentId(studentId);
+    public StudentDTO getStudentById(@PathVariable("id") Long studentId) {
+        return studentService.getStudentById(studentId);
     }
 
     @DeleteMapping("/{id}")

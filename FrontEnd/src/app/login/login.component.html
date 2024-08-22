@@ -7,7 +7,8 @@
 </head>
 <body>
 <div class="container">
-  <h1>Student Records</h1>
+  <h1 class="logo">Student <span>Records</span></h1>
+  <br>
 
   <!-- Search Bar -->
   <div class="search-bar">
@@ -18,7 +19,6 @@
   <!-- Display Student Records -->
   <div *ngFor="let student of filteredStudents" class="student-card">
     <div class="student-info">
-      <img [src]="student.studentPhotoUrl" alt="Student Photo" />
       <div class="info">
 
         <p><strong> Name: </strong> {{ student.name }}</p>
@@ -49,9 +49,11 @@
       <input type="number" [(ngModel)]="selectedStudent.age" name="age" required />
 
       <label>Gender:</label>
-      <input type="radio" [(ngModel)]="selectedStudent.gender" name="gender" value="Male" /> Male
-      <input type="radio" [(ngModel)]="selectedStudent.gender" name="gender" value="Female" /> Female
-      <input type="radio" [(ngModel)]="selectedStudent.gender" name="gender" value="Other" /> Other
+      <div class="gender-options">
+        <label><input type="radio" [(ngModel)]="selectedStudent.gender" name="gender" value="Male" /> Male</label>
+        <label><input type="radio" [(ngModel)]="selectedStudent.gender" name="gender" value="Female" /> Female</label>
+        <label><input type="radio" [(ngModel)]="selectedStudent.gender" name="gender" value="Other" /> Other</label>
+      </div>
 
       <label>Course:</label>
       <select [(ngModel)]="selectedStudent.course" name="course" (change)="populateStreams()">

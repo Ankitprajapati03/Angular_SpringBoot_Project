@@ -27,6 +27,10 @@ export class RegistrationComponent {
   constructor(private http: HttpClient) { }
 
   onRegister() {
+    if (!this.validateForm()) {
+      return;
+    }
+
     const formData: FormData = new FormData();
     formData.append('name', this.registrationObj.name);
     formData.append('age', this.registrationObj.age?.toString() || '');
@@ -41,6 +45,7 @@ export class RegistrationComponent {
     if (this.additionalDocument) {
       formData.append('additionalDocument', this.additionalDocument, this.additionalDocument.name);
     }
+
     this.http.post("http://localhost:8080/api/students", formData).subscribe(
       (res: any) => {
         alert("Registration Successful");
@@ -50,6 +55,15 @@ export class RegistrationComponent {
         console.error("API call error:", error);
       }
     );
+  }
+
+  onFileSelect(event: any, fileType: string) {
+    const file = event.target.files[0];
+    if (fileType === 'studentPhoto') {
+      this.studentPhoto = file;
+    } else if (fileType === 'additionalDocument') {
+      this.additionalDocument = file;
+    }
   }
 
   populateStreams() {
@@ -72,12 +86,13 @@ export class RegistrationComponent {
     this.registrationObj.stream = '';
   }
 
-  onFileSelect(event: any, fileType: string) {
-    const file = event.target.files[0];
-    if (fileType === 'studentPhoto') {
-      this.studentPhoto = file;
-    } else if (fileType === 'additionalDocument') {
-      this.additionalDocument = file;
+  validateForm(): boolean {
+    if (!this.registrationObj.name || !this.registrationObj.age || !this.registrationObj.gender || !this.registrationObj.rollNumber ||
+        !this.registrationObj.course || !this.registrationObj.semester || !this.registrationObj.stream ||
+        !this.studentPhoto || !this.additionalDocument) {
+      alert('Please fill out all required fields.');
+      return false;
     }
+    return true;
   }
 }

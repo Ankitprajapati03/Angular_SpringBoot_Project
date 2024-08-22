@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,7 +22,6 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final ModelMapper modelMapper;
 
-    // Read the base directory from the configuration file
     @Value("${file.upload-dir:D:/Angular_SpringBoot_Project/uploads}")
     private String uploadDir;
 
@@ -32,41 +32,51 @@ public class StudentService {
 
     public StudentDTO createNewStudent(StudentDTO studentDTO, MultipartFile studentPhoto, MultipartFile additionalDocument) {
         StudentEntity studentEntity = modelMapper.map(studentDTO, StudentEntity.class);
+        Path photoPath = null;
+        Path docPath = null;
 
         try {
-            // Resolve and create the upload directory
             Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
-
-            // Handle student photo
             if (studentPhoto != null && !studentPhoto.isEmpty()) {
                 String photoFileName = StringUtils.cleanPath(studentPhoto.getOriginalFilename());
-                Path photoPath = uploadPath.resolve(photoFileName);
+                photoPath = uploadPath.resolve(photoFileName);
                 Files.copy(studentPhoto.getInputStream(), photoPath);
                 studentEntity.setStudentPhoto(photoPath.toString());
             }
-
-            // Handle additional document
             if (additionalDocument != null && !additionalDocument.isEmpty()) {
                 String docFileName = StringUtils.cleanPath(additionalDocument.getOriginalFilename());
-                Path docPath = uploadPath.resolve(docFileName);
+                docPath = uploadPath.resolve(docFileName);
                 Files.copy(additionalDocument.getInputStream(), docPath);
                 studentEntity.setAdditionalDocument(docPath.toString());
             }
 
-        } catch (IOException e) {
-            e.printStackTrace(); // Handle the exception, or rethrow as needed
-            // Consider creating a custom exception to handle file upload issues
-        }
+            studentEntity = studentRepository.save(studentEntity);
+            return modelMapper.map(studentEntity, StudentDTO.class);
 
-        studentEntity = studentRepository.save(studentEntity);
-        return modelMapper.map(studentEntity, StudentDTO.class);
+        } catch (IOException e) {
+            if (photoPath != null) {
+                try {
+                    Files.deleteIfExists(photoPath);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            if (docPath != null) {
+                try {
+                    Files.deleteIfExists(docPath);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            throw new RuntimeException("Failed to save student", e);
+        }
     }
 
-    public StudentDTO getStudentId(Long id) {
-        StudentEntity studentEntity = studentRepository.findById(id).orElseThrow();
+    public StudentDTO getStudentById(Long id) {
+        StudentEntity studentEntity = studentRepository.findById(id).orElseThrow(() -> new RuntimeException("Student not found"));
         return modelMapper.map(studentEntity, StudentDTO.class);
     }
 
@@ -78,12 +88,29 @@ public class StudentService {
     }
 
     public boolean deleteStudentById(Long id) {
-        studentRepository.deleteById(id);
-        return true;
+        Optional<StudentEntity> studentOpt = studentRepository.findById(id);
+        if (studentOpt.isPresent()) {
+            StudentEntity studentEntity = studentOpt.get();
+
+            try {
+                if (studentEntity.getStudentPhoto() != null) {
+                    Files.deleteIfExists(Paths.get(studentEntity.getStudentPhoto()));
+                }
+                if (studentEntity.getAdditionalDocument() != null) {
+                    Files.deleteIfExists(Paths.get(studentEntity.getAdditionalDocument()));
+                }
+                studentRepository.deleteById(id);
+                return true;
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to delete student files", e);
+            }
+        } else {
+            throw new RuntimeException("Student not found");
+        }
     }
 
     public StudentDTO updateStudentById(Long studentId, StudentDTO studentDTO) {
-        StudentEntity studentEntity = studentRepository.findById(studentId).orElseThrow();
+        StudentEntity studentEntity = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student not found"));
         modelMapper.map(studentDTO, studentEntity);
         studentRepository.save(studentEntity);
         return modelMapper.map(studentEntity, StudentDTO.class);
