@@ -77,7 +77,7 @@ export class LoginComponent implements OnInit {
     this.http.put(`${this.apiUrl}/${updatedStudent.rollNumber}`, updatedStudent).subscribe(
       () => {
         this.isEditing = false;
-        this.loadStudents(); // Reload the student list to reflect changes
+        this.loadStudents();
         alert('Student updated successfully');
       },
       (error) => {
@@ -89,7 +89,7 @@ export class LoginComponent implements OnInit {
   deleteStudent(rollNumber: string) {
     this.http.delete(`${this.apiUrl}/${rollNumber}`).subscribe(
       () => {
-        this.loadStudents(); // Reload the student list after deletion
+        this.loadStudents();
         alert('Student deleted successfully');
       },
       (error) => {
