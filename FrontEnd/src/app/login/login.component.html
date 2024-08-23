@@ -11,14 +11,15 @@
   <br>
   <!-- Search Bar -->
   <div class="search-bar">
-    <input type="text" placeholder="Search by Roll Number" [(ngModel)]="searchRollNumber" />
+    <input type="text" placeholder="Search record by registration ID" [(ngModel)]="searchQuery" />
     <button (click)="filterStudents()">Search</button>
+    <button (click)="loadAllStudents()">Student List</button>
   </div>
   <!-- Display Student Records -->
   <div *ngFor="let student of filteredStudents" class="student-card">
     <div class="student-info">
       <div class="info">
-
+        <p><strong>Registration ID: </strong> {{ student.id }}</p>
         <p><strong> Name: </strong> {{ student.name }}</p>
         <p><strong>Age: </strong> {{ student.age }}</p>
         <p><strong>Gender: </strong> {{ student.gender }}</p>

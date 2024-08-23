@@ -40,12 +40,14 @@ public class StudentService {
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
+
             if (studentPhoto != null && !studentPhoto.isEmpty()) {
                 String photoFileName = StringUtils.cleanPath(studentPhoto.getOriginalFilename());
                 photoPath = uploadPath.resolve(photoFileName);
                 Files.copy(studentPhoto.getInputStream(), photoPath);
                 studentEntity.setStudentPhoto(photoPath.toString());
             }
+
             if (additionalDocument != null && !additionalDocument.isEmpty()) {
                 String docFileName = StringUtils.cleanPath(additionalDocument.getOriginalFilename());
                 docPath = uploadPath.resolve(docFileName);
@@ -76,7 +78,8 @@ public class StudentService {
     }
 
     public StudentDTO getStudentById(Long id) {
-        StudentEntity studentEntity = studentRepository.findById(id).orElseThrow(() -> new RuntimeException("Student not found"));
+        StudentEntity studentEntity = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
         return modelMapper.map(studentEntity, StudentDTO.class);
     }
 
@@ -86,7 +89,6 @@ public class StudentService {
                 .map(student -> modelMapper.map(student, StudentDTO.class))
                 .collect(Collectors.toList());
     }
-
 
     public void deleteStudentByRollNumber(String rollNumber) {
         Optional<StudentEntity> studentEntity = studentRepository.findByRollNumber(rollNumber);
@@ -98,7 +100,8 @@ public class StudentService {
     }
 
     public StudentDTO updateStudentById(Long studentId, StudentDTO studentDTO) {
-        StudentEntity studentEntity = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student not found"));
+        StudentEntity studentEntity = studentRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
         modelMapper.map(studentDTO, studentEntity);
         studentRepository.save(studentEntity);
         return modelMapper.map(studentEntity, StudentDTO.class);

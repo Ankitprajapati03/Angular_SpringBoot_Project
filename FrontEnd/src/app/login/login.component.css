@@ -36,6 +36,7 @@ body {
 
 .search-bar {
   display: flex;
+  gap: 5px;
   justify-content: center;
   margin-bottom: 30px;
 }
@@ -45,7 +46,7 @@ body {
   padding: 10px 15px;
   font-size: 1rem;
   border: 1px solid #ccc;
-  border-radius: 4px 0 0 4px;
+  border-radius: 5px 5px 5px 5px;
   outline: none;
   transition: border 0.3s ease;
 }
@@ -60,7 +61,7 @@ body {
   background-color: #009988;
   color: #fff;
   border: none;
-  border-radius: 0 4px 4px 0;
+  border-radius: 5px 5px 5px 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }

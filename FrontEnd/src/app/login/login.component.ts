@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 interface Student {
+  id: number;
   name: string;
   age: number;
   gender: string;
@@ -22,8 +21,9 @@ interface Student {
 export class LoginComponent implements OnInit {
   students: Student[] = [];
   filteredStudents: Student[] = [];
-  searchRollNumber: string = '';
+  searchQuery: string = '';
   selectedStudent: Student = {
+    id: 0,
     name: '',
     age: 0,
     gender: '',
@@ -40,10 +40,13 @@ export class LoginComponent implements OnInit {
 
   constructor(private http: HttpClient) {}
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  // Load all students when Student List button is clicked
+  loadAllStudents() {
     this.loadStudents();
   }
-// Student data loading logic
+
   loadStudents() {
     this.http.get<Student[]>(this.apiUrl).subscribe(
       (response: Student[]) => {
@@ -55,23 +58,33 @@ export class LoginComponent implements OnInit {
       }
     );
   }
-// Filter student record on the basis of rollNumber
+
+  // Filter student records based on Registration ID
   filterStudents() {
-    if (this.searchRollNumber) {
-      this.filteredStudents = this.students.filter(student =>
-        student.rollNumber.includes(this.searchRollNumber)
+    const query = this.searchQuery.trim().toLowerCase();
+    if (query) {
+      this.http.get<Student>(`${this.apiUrl}/${query}`).subscribe(
+        (student: Student) => {
+          this.filteredStudents = student ? [student] : [];
+        },
+        (error) => {
+          console.error('Error fetching student:', error);
+          this.filteredStudents = [];
+        }
       );
     } else {
       this.filteredStudents = this.students;
     }
   }
-// Edit student record
+
+  // Edit student record
   editStudent(student: Student) {
     this.selectedStudent = { ...student };
     this.isEditing = true;
     this.populateStreams();
   }
-// Student updated record saving logic
+
+  // Save updated student record
   saveStudent() {
     const updatedStudent = { ...this.selectedStudent };
     this.http.put(`${this.apiUrl}/${updatedStudent.rollNumber}`, updatedStudent).subscribe(
@@ -85,14 +98,17 @@ export class LoginComponent implements OnInit {
       }
     );
   }
-// Student record deletion logic
+
+  // Delete student record
   deleteStudent(rollNumber: string) {
     const confirmed = window.confirm('Are you sure you want to delete this student record?');
     if (confirmed) {
       this.http.delete(`${this.apiUrl}/${rollNumber}`).subscribe(
         response => {
           window.alert('Student record deleted successfully!!');
-          this.loadStudents();
+          //this.loadStudents();
+          window.location.reload();
+
         },
         error => {
           console.error('Error deleting student:', error);
@@ -101,10 +117,12 @@ export class LoginComponent implements OnInit {
       );
     }
   }
-// Updating student record when discarded
+
+  // Discard the update student form opened
   discardChanges() {
     this.isEditing = false;
     this.selectedStudent = {
+      id: 0,
       name: '',
       age: 0,
       gender: '',
@@ -115,7 +133,8 @@ export class LoginComponent implements OnInit {
       studentPhotoUrl: ''
     };
   }
-// Populate stream list on update button click
+
+  // Populate streams based on the selected course
   populateStreams() {
     const course = this.selectedStudent.course;
     if (course === 'BA') {
@@ -136,4 +155,3 @@ export class LoginComponent implements OnInit {
     this.selectedStudent.stream = '';
   }
 }
-

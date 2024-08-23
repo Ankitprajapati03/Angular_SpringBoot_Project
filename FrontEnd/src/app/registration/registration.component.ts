@@ -49,6 +49,7 @@ export class RegistrationComponent {
     this.http.post("http://localhost:8080/api/students", formData).subscribe(
       (res: any) => {
         alert("Registration Successful");
+        window.location.href = "/homepage";
       },
       (error) => {
         alert("An error occurred while registering.");
