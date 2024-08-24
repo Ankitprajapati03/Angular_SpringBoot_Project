@@ -104,7 +104,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  // Delete student record
+  // Delete student record from database
   deleteStudent(rollNumber: string) {
     const confirmed = window.confirm('Are you sure you want to delete this student record?');
     if (confirmed) {

@@ -98,7 +98,7 @@ public class StudentService {
             throw new RuntimeException("Student not found");
         }
     }
-
+//Student updation logic
     public StudentDTO updateStudentByRollNumber(String rollNumber, StudentDTO studentDTO) {
         Optional<StudentEntity> optionalStudent = studentRepository.findByRollNumber(rollNumber);
 

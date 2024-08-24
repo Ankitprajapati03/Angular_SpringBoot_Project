@@ -11,5 +11,4 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Long> {
 
     Optional<StudentEntity> findByRollNumber(String rollNumber);
 
-    // You can add more custom query methods here if needed
 }
