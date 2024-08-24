@@ -15,6 +15,9 @@
     <button (click)="filterStudents()">Search</button>
     <button (click)="loadAllStudents()">Student List</button>
   </div>
+  <div class="search-validation">
+  <p *ngIf="errorMessage" class="error-message" >{{ errorMessage }}</p>
+  </div>
   <!-- Display Student Records -->
   <div *ngFor="let student of filteredStudents" class="student-card">
     <div class="student-info">

@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit {
   students: Student[] = [];
   filteredStudents: Student[] = [];
   searchQuery: string = '';
+  errorMessage: string = '';
   selectedStudent: Student = {
     id: 0,
     name: '',
@@ -69,12 +70,17 @@ export class LoginComponent implements OnInit {
         },
         (error) => {
           console.error('Error fetching student:', error);
+          this.errorMessage = 'Student record not found';
           this.filteredStudents = [];
         }
       );
     } else {
       this.filteredStudents = this.students;
     }
+   this.validateInput();
+          if (this.errorMessage) {
+            return;
+          }
   }
 
   // Edit student record
@@ -88,7 +94,6 @@ export class LoginComponent implements OnInit {
   saveStudent() {
     if (this.selectedStudent) {
       const updatedStudent = { ...this.selectedStudent };
-
       this.http.put<Student>(`${this.apiUrl}/${updatedStudent.rollNumber}`, updatedStudent).subscribe(
         () => {
           this.isEditing = false;
@@ -158,5 +163,16 @@ export class LoginComponent implements OnInit {
       this.streams = [];
     }
     this.selectedStudent.stream = '';
+  }
+//Search bar validation code
+validateInput() {
+    const specialCharPattern = /[!@#$%^&*(),.?":{}|<>\"/';-_+=]/g;
+    if (!this.searchQuery.trim()) {
+      this.errorMessage = 'Please enter a valid registration ID.';
+    } else if (specialCharPattern.test(this.searchQuery)) {
+      this.errorMessage = 'No special characters allowed in the search query.';
+    } else {
+      this.errorMessage = '';
+    }
   }
 }

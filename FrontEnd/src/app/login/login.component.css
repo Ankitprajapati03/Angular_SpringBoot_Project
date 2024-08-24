@@ -217,3 +217,9 @@ body {
 .form-actions button:nth-child(2):hover {
   background-color: #007a6d;
 }
+.search-validation{
+margin-top: -17px;
+}
+.error-message{
+color: red;
+}
