@@ -64,8 +64,16 @@ public class StudentController {
         }
     }
 
-    @PutMapping("/{id}")
-    public StudentDTO updateStudentById(@PathVariable("id") Long studentId, @RequestBody StudentDTO studentDTO) {
-        return studentService.updateStudentById(studentId, studentDTO);
+    @PutMapping("/{rollNumber}")
+    public ResponseEntity<StudentDTO> updateStudentByRollNumber(
+            @PathVariable("rollNumber") String rollNumber,
+            @RequestBody StudentDTO studentDTO) {
+
+        try {
+            StudentDTO updatedStudent = studentService.updateStudentByRollNumber(rollNumber, studentDTO);
+            return new ResponseEntity<>(updatedStudent, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

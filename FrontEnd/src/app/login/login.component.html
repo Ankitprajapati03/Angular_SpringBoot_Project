@@ -66,6 +66,7 @@
 
       <label>Stream:</label>
       <select [(ngModel)]="selectedStudent.stream" name="stream" required>
+        <option value="" disabled selected>Choose Your Stream</option>
         <option *ngFor="let stream of streams" [value]="stream">{{ stream }}</option>
       </select>
 

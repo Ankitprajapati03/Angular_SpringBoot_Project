@@ -99,11 +99,22 @@ public class StudentService {
         }
     }
 
-    public StudentDTO updateStudentById(Long studentId, StudentDTO studentDTO) {
-        StudentEntity studentEntity = studentRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
-        modelMapper.map(studentDTO, studentEntity);
-        studentRepository.save(studentEntity);
-        return modelMapper.map(studentEntity, StudentDTO.class);
+    public StudentDTO updateStudentByRollNumber(String rollNumber, StudentDTO studentDTO) {
+        Optional<StudentEntity> optionalStudent = studentRepository.findByRollNumber(rollNumber);
+
+        if (optionalStudent.isPresent()) {
+            StudentEntity studentEntity = optionalStudent.get();
+            modelMapper.map(studentDTO, studentEntity);
+
+            if (studentDTO.getStudentPhoto() != null) {
+                studentEntity.setStudentPhoto(studentDTO.getStudentPhoto());
+            }
+
+            studentRepository.save(studentEntity);
+
+            return modelMapper.map(studentEntity, StudentDTO.class);
+        } else {
+            throw new RuntimeException("Student not found");
+        }
     }
 }

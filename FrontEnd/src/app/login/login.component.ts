@@ -86,17 +86,22 @@ export class LoginComponent implements OnInit {
 
   // Save updated student record
   saveStudent() {
-    const updatedStudent = { ...this.selectedStudent };
-    this.http.put(`${this.apiUrl}/${updatedStudent.rollNumber}`, updatedStudent).subscribe(
-      () => {
-        this.isEditing = false;
-        this.loadStudents();
-        alert('Student updated successfully');
-      },
-      (error) => {
-        console.error('Error updating student:', error);
-      }
-    );
+    if (this.selectedStudent) {
+      const updatedStudent = { ...this.selectedStudent };
+
+      this.http.put<Student>(`${this.apiUrl}/${updatedStudent.rollNumber}`, updatedStudent).subscribe(
+        () => {
+          this.isEditing = false;
+          //this.loadStudents();
+          alert('Student record updated successfully');
+          window.location.reload();
+        },
+        (error) => {
+          console.error('Error updating student:', error);
+          alert('Failed to update student. Please check the input and try again.');
+        }
+      );
+    }
   }
 
   // Delete student record
