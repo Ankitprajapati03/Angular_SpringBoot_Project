@@ -63,7 +63,7 @@ public class StudentController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-//Student Updation Login
+//Student record Updation Logic
     @PutMapping("/{rollNumber}")
     public ResponseEntity<StudentDTO> updateStudentByRollNumber(
             @PathVariable("rollNumber") String rollNumber,
