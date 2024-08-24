@@ -36,7 +36,6 @@ export class LoginComponent implements OnInit {
   };
   isEditing: boolean = false;
   streams: string[] = [];
-
   private apiUrl = 'http://localhost:8080/api/students';
 
   constructor(private http: HttpClient) {}
@@ -45,6 +44,8 @@ export class LoginComponent implements OnInit {
 
   // Load all students when Student List button is clicked
   loadAllStudents() {
+    this.errorMessage = ''; // Clear error message when loading all students
+    this.searchQuery = ''; // Clear the search query when loading all students
     this.loadStudents();
   }
 
@@ -63,10 +64,15 @@ export class LoginComponent implements OnInit {
   // Filter student records based on Registration ID
   filterStudents() {
     const query = this.searchQuery.trim().toLowerCase();
-    if (query) {
+
+    if (!query) {
+      this.filteredStudents = [];
+      this.errorMessage = '';
+    } else {
       this.http.get<Student>(`${this.apiUrl}/${query}`).subscribe(
         (student: Student) => {
           this.filteredStudents = student ? [student] : [];
+          this.errorMessage = '';
         },
         (error) => {
           console.error('Error fetching student:', error);
@@ -74,13 +80,11 @@ export class LoginComponent implements OnInit {
           this.filteredStudents = [];
         }
       );
-    } else {
-      this.filteredStudents = this.students;
     }
-   this.validateInput();
-          if (this.errorMessage) {
-            return;
-          }
+    this.validateInput();
+    if (this.errorMessage) {
+      return;
+    }
   }
 
   // Edit student record
@@ -97,7 +101,6 @@ export class LoginComponent implements OnInit {
       this.http.put<Student>(`${this.apiUrl}/${updatedStudent.rollNumber}`, updatedStudent).subscribe(
         () => {
           this.isEditing = false;
-          //this.loadStudents();
           alert('Student record updated successfully');
           window.location.reload();
         },
@@ -116,9 +119,7 @@ export class LoginComponent implements OnInit {
       this.http.delete(`${this.apiUrl}/${rollNumber}`).subscribe(
         response => {
           window.alert('Student record deleted successfully!!');
-          //this.loadStudents();
           window.location.reload();
-
         },
         error => {
           console.error('Error deleting student:', error);
@@ -164,15 +165,14 @@ export class LoginComponent implements OnInit {
     }
     this.selectedStudent.stream = '';
   }
-//Search bar validation code
-validateInput() {
-    const specialCharPattern = /[!@#$%^&*(),.?":{}|<>\"/';-_+=]/g;
+
+  // Search bar validation code
+  validateInput() {
     if (!this.searchQuery.trim()) {
       this.errorMessage = 'Please enter a valid registration ID.';
-    } else if (specialCharPattern.test(this.searchQuery)) {
-      this.errorMessage = 'No special characters allowed in the search query.';
     } else {
       this.errorMessage = '';
     }
   }
 }
+
