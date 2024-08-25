@@ -1,14 +1,12 @@
 package com.student.demo.entities;
 
 import jakarta.persistence.*;
-import jdk.jfr.Enabled;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 @Entity
-@Table(name="students")
+@Table(name="students", uniqueConstraints = @UniqueConstraint(columnNames = "rollNumber"))
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,6 +14,7 @@ public class StudentEntity {
  @Id
  @GeneratedValue(strategy = GenerationType.AUTO)
  private Long id;
+
  private String name;
  private Integer age;
  private String gender;

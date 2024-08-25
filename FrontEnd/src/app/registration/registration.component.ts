@@ -51,10 +51,14 @@ export class RegistrationComponent {
         alert("Registration Successful");
         window.location.href = "/homepage";
       },
-      (error) => {
+(error) => {
+      if (error.status === 400 || error.error?.message === 'Roll number already exists') {
+              alert("Roll number already in use. Please choose another.");
+      } else {
         alert("An error occurred while registering.");
         console.error("API call error:", error);
       }
+    }
     );
   }
 

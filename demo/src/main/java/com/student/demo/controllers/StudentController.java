@@ -21,7 +21,7 @@ public class StudentController {
     }
 
     @PostMapping(consumes = "multipart/form-data")
-    public StudentDTO createNewStudent(
+    public ResponseEntity<StudentDTO> createNewStudent(
             @RequestParam("name") String name,
             @RequestParam("age") Integer age,
             @RequestParam("gender") String gender,
@@ -32,16 +32,21 @@ public class StudentController {
             @RequestParam("studentPhoto") MultipartFile studentPhoto,
             @RequestParam("additionalDocument") MultipartFile additionalDocument) {
 
-        StudentDTO studentDTO = new StudentDTO();
-        studentDTO.setName(name);
-        studentDTO.setAge(age);
-        studentDTO.setGender(gender);
-        studentDTO.setRollNumber(rollNumber);
-        studentDTO.setCourse(course);
-        studentDTO.setSemester(semester);
-        studentDTO.setStream(stream);
+        try {
+            StudentDTO studentDTO = new StudentDTO();
+            studentDTO.setName(name);
+            studentDTO.setAge(age);
+            studentDTO.setGender(gender);
+            studentDTO.setRollNumber(rollNumber);
+            studentDTO.setCourse(course);
+            studentDTO.setSemester(semester);
+            studentDTO.setStream(stream);
 
-        return studentService.createNewStudent(studentDTO, studentPhoto, additionalDocument);
+            StudentDTO createdStudent = studentService.createNewStudent(studentDTO, studentPhoto, additionalDocument);
+            return new ResponseEntity<>(createdStudent, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping
@@ -63,7 +68,7 @@ public class StudentController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-//Student record Updation Logi
+
     @PutMapping("/{rollNumber}")
     public ResponseEntity<StudentDTO> updateStudentByRollNumber(
             @PathVariable("rollNumber") String rollNumber,

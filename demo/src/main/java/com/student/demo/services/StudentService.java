@@ -31,6 +31,10 @@ public class StudentService {
     }
 
     public StudentDTO createNewStudent(StudentDTO studentDTO, MultipartFile studentPhoto, MultipartFile additionalDocument) {
+        if (studentRepository.existsByRollNumber(studentDTO.getRollNumber())) {
+            throw new RuntimeException("Roll number already exists");
+        }
+
         StudentEntity studentEntity = modelMapper.map(studentDTO, StudentEntity.class);
         Path photoPath = null;
         Path docPath = null;
@@ -98,7 +102,7 @@ public class StudentService {
             throw new RuntimeException("Student not found");
         }
     }
-//Student record updation logic
+
     public StudentDTO updateStudentByRollNumber(String rollNumber, StudentDTO studentDTO) {
         Optional<StudentEntity> optionalStudent = studentRepository.findByRollNumber(rollNumber);
 
