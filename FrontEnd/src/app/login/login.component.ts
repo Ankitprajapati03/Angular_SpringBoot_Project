@@ -44,8 +44,8 @@ export class LoginComponent implements OnInit {
 
   // Load all students when Student List button is clicked
   loadAllStudents() {
-    this.errorMessage = ''; // Clear error message when loading all students
-    this.searchQuery = ''; // Clear the search query when loading all students
+    this.errorMessage = '';
+    this.searchQuery = '';
     this.loadStudents();
   }
 
@@ -63,27 +63,35 @@ export class LoginComponent implements OnInit {
 
   // Filter student records based on Registration ID
   filterStudents() {
+    this.validateInput();
+
+    if (this.errorMessage) {
+        this.filteredStudents = [];
+        return;
+    }
+
     const query = this.searchQuery.trim().toLowerCase();
 
     if (!query) {
-      this.filteredStudents = [];
-      this.errorMessage = '';
+        this.filteredStudents = [];
+        this.errorMessage = '';
     } else {
-      this.http.get<Student>(`${this.apiUrl}/${query}`).subscribe(
-        (student: Student) => {
-          this.filteredStudents = student ? [student] : [];
-          this.errorMessage = '';
-        },
-        (error) => {
-          console.error('Error fetching student:', error);
-          this.errorMessage = 'Student record not found';
-          this.filteredStudents = [];
-        }
-      );
-    }
-    this.validateInput();
-    if (this.errorMessage) {
-      return;
+        this.http.get<Student>(`${this.apiUrl}/${query}`).subscribe(
+            (student: Student) => {
+                if (student) {
+                    this.filteredStudents = [student];
+                    this.errorMessage = ''; // Reset the error message if a student is found
+                } else {
+                    this.filteredStudents = [];
+                    this.errorMessage = 'Student record not found';
+                }
+            },
+            (error) => {
+                console.error('Error fetching student:', error);
+                this.errorMessage = 'Student record not found';
+                this.filteredStudents = [];
+            }
+        );
     }
   }
 
@@ -168,11 +176,13 @@ export class LoginComponent implements OnInit {
 
   // Search bar validation code
   validateInput() {
+    const specialCharPattern = /[!@#$%^&*(),.?":{}|<>\"/';-_+=]/g;
     if (!this.searchQuery.trim()) {
       this.errorMessage = 'Please enter a valid registration ID.';
+    } else if (specialCharPattern.test(this.searchQuery)) {
+      this.errorMessage = 'No special characters allowed in the search.';
     } else {
       this.errorMessage = '';
     }
   }
 }
-
