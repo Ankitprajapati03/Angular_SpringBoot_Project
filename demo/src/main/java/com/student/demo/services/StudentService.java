@@ -22,6 +22,7 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final ModelMapper modelMapper;
 
+    //Defining file path where to upload files
     @Value("${file.upload-dir:D:/Angular_SpringBoot_Project/uploads}")
     private String uploadDir;
 
@@ -29,7 +30,7 @@ public class StudentService {
         this.studentRepository = studentRepository;
         this.modelMapper = modelMapper;
     }
-
+//Student record registration logic
     public StudentDTO createNewStudent(StudentDTO studentDTO, MultipartFile studentPhoto, MultipartFile additionalDocument) {
         if (studentRepository.existsByRollNumber(studentDTO.getRollNumber())) {
             throw new RuntimeException("Roll number already exists");
@@ -80,20 +81,20 @@ public class StudentService {
             throw new RuntimeException("Failed to save student", e);
         }
     }
-
+//Searching individual student record by id
     public StudentDTO getStudentById(Long id) {
         StudentEntity studentEntity = studentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
         return modelMapper.map(studentEntity, StudentDTO.class);
     }
-
+//Fetching all student list on ui
     public List<StudentDTO> getAllStudents() {
         return studentRepository.findAll()
                 .stream()
                 .map(student -> modelMapper.map(student, StudentDTO.class))
                 .collect(Collectors.toList());
     }
-
+//Deleting individual student record
     public void deleteStudentByRollNumber(String rollNumber) {
         Optional<StudentEntity> studentEntity = studentRepository.findByRollNumber(rollNumber);
         if (studentEntity.isPresent()) {
@@ -102,7 +103,7 @@ public class StudentService {
             throw new RuntimeException("Student not found");
         }
     }
-
+//Individual student record updation logic
     public StudentDTO updateStudentByRollNumber(String rollNumber, StudentDTO studentDTO) {
         Optional<StudentEntity> optionalStudent = studentRepository.findByRollNumber(rollNumber);
 

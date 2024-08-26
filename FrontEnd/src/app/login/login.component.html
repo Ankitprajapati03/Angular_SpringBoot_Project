@@ -44,20 +44,29 @@
   <div *ngIf="isEditing" class="edit-form">
     <h2>Edit Student Details</h2>
     <form (ngSubmit)="saveStudent()">
-      <label>Name:</label>
-      <input type="text" [(ngModel)]="selectedStudent.name" name="name" required />
-
-      <label>Age:</label>
-      <input type="number" [(ngModel)]="selectedStudent.age" name="age" required />
-
-      <label>Gender:</label>
+      <!-- Name -->
+      <label>Name</label>
+      <input type="text" [(ngModel)]="selectedStudent.name" name="name" required #name="ngModel" required maxlength="120" pattern="^[a-zA-Z\s]*$" (input)="validateName()"/>
+      <!-- Error message for Name  -->
+      <div class="error-message" *ngIf="errorMessageName">
+        {{ errorMessageName }}
+      </div>
+      <!-- Age -->
+      <label>Age</label>
+      <input type="number" [(ngModel)]="selectedStudent.age" name="age" required #age="ngModel" required (input)="validateAge()"/>
+      <!-- Error message for Age -->
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+      <!-- Gender -->
+      <label>Gender</label>
       <div class="gender-options">
         <label><input type="radio" [(ngModel)]="selectedStudent.gender" name="gender" value="Male" /> Male</label>
         <label><input type="radio" [(ngModel)]="selectedStudent.gender" name="gender" value="Female" /> Female</label>
         <label><input type="radio" [(ngModel)]="selectedStudent.gender" name="gender" value="Other" /> Other</label>
       </div>
-
-      <label>Course:</label>
+      <!-- Course -->
+      <label>Course</label>
       <select [(ngModel)]="selectedStudent.course" name="course" (change)="populateStreams()">
         <option value="BA">Bachelor of Arts</option>
         <option value="BSc">Bachelor of Science</option>
@@ -66,14 +75,14 @@
         <option value="BCA">Bachelor of Computer Applications</option>
         <option value="BTech">Bachelor of Technology</option>
       </select>
-
-      <label>Stream:</label>
+      <!-- Stream -->
+      <label>Stream</label>
       <select [(ngModel)]="selectedStudent.stream" name="stream" required>
         <option value="" disabled selected>Choose Your Stream</option>
         <option *ngFor="let stream of streams" [value]="stream">{{ stream }}</option>
       </select>
-
-      <label>Semester:</label>
+      <!-- Semester -->
+      <label>Semester</label>
       <select [(ngModel)]="selectedStudent.semester" name="semester" required>
         <option value="Semester 1">Semester 1</option>
         <option value="Semester 2">Semester 2</option>

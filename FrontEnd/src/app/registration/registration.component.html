@@ -14,33 +14,27 @@
   <div class="form-box">
     <form id="registrationForm" (ngSubmit)="onRegister()" #registrationForm="ngForm">
       <div class="logo">Registration <span>Form</span></div>
-
       <!-- Name Input -->
       <div class="input-box">
-        <input type="text" id="name" name="name" [(ngModel)]="registrationObj.name"
-               placeholder="Enter Your Name" #name="ngModel"
-               required maxlength="100" pattern="^[a-zA-Z\s]*$">
         <label for="name">Name</label>
-        <div class="invalid-feedback" *ngIf="name.invalid && (name.dirty || name.touched)">
-          <div *ngIf="name.errors?.['required']">Name is required</div>
-          <div *ngIf="name.errors?.['maxlength']">Name cannot exceed 100 characters</div>
-          <div *ngIf="name.errors?.['pattern']">Name cannot contain special characters</div>
+        <input type="text" id="name" name="name" [(ngModel)]="registrationObj.name" placeholder="Enter Your Name" #name="ngModel" required maxlength="120" pattern="^[a-zA-Z\s]*$" (input)="validateName()">
+        <!-- Error message for Name  -->
+        <div class="error-message" *ngIf="errorMessageName">
+          {{ errorMessageName }}
         </div>
       </div>
-
       <!-- Age Input -->
       <div class="input-box">
-        <input type="number" id="age" name="age" [(ngModel)]="registrationObj.age"
-               placeholder="Enter Your Age" #age="ngModel" required pattern="^\d{1,3}$" max="120">
         <label for="age">Age</label>
-        <div class="invalid-feedback" *ngIf="age.invalid && (age.dirty || age.touched)">
-          <div *ngIf="age.errors?.['required']">Age is required</div>
-          <div *ngIf="age.errors?.['pattern'] || age.errors?.['max']">Age must be a valid number between 1 and 120</div>
+        <input type="number" id="age" name="age" [(ngModel)]="registrationObj.age" placeholder="Enter Your Age" #age="ngModel" required (input)="validateAge()">
+        <!-- Error message for Age -->
+        <div class="error-message" *ngIf="errorMessage">
+          {{ errorMessage }}
         </div>
       </div>
-
       <!-- Gender Selection -->
       <div class="input-box">
+        <label>Gender</label>
         <div class="radio-group">
           <span style="margin-left: 1px;">
             <input type="radio" id="gender-male" name="gender" value="Male" [(ngModel)]="registrationObj.gender" #gender="ngModel" required>
@@ -55,25 +49,18 @@
             <label for="gender-other">Other</label>
           </span>
         </div>
-        <label>Gender</label>
-        <div class="invalid-feedback" *ngIf="gender.invalid && (gender.dirty || gender.touched)">
-          Gender is required
-        </div>
+        <div class="invalid-feedback" *ngIf="gender.invalid && (gender.dirty || gender.touched)">Gender is required</div>
       </div>
-
       <!-- Roll Number Input -->
       <div class="input-box">
-        <input type="text" id="rollNumber" name="rollNumber" [(ngModel)]="registrationObj.rollNumber"
-               placeholder="Enter Roll Number" #rollNumber="ngModel" required pattern="^[a-zA-Z0-9]+$">
         <label for="rollNumber">Roll Number</label>
-        <div class="invalid-feedback" *ngIf="rollNumber.invalid && (rollNumber.dirty || rollNumber.touched)">
-          <div *ngIf="rollNumber.errors?.['required']">Roll Number is required</div>
-          <div *ngIf="rollNumber.errors?.['pattern']">Roll Number must contain only letters and numbers</div>
-        </div>
+        <input type="text" id="rollNumber" name="rollNumber" [(ngModel)]="registrationObj.rollNumber" placeholder="Enter Roll Number" #rollNumber="ngModel" required (input)="validateRollNumber()" pattern="^[a-zA-Z0-9]+$">
+        <!-- Error message for Roll Number -->
+        <div class="error-message" *ngIf="errorMessageRollNumber">{{ errorMessageRollNumber }}</div>
       </div>
-
       <!-- Course Selection -->
       <div class="input-box">
+        <label>Course</label>
         <select id="courseSelect" name="course" [(ngModel)]="registrationObj.course" #course="ngModel" (change)="populateStreams()" required>
           <option value="" disabled selected>Choose Your Course</option>
           <option value="BA">Bachelor of Arts</option>
@@ -83,26 +70,20 @@
           <option value="BCA">Bachelor of Computer Applications</option>
           <option value="BTech">Bachelor of Technology</option>
         </select>
-        <label>Course</label>
-        <div class="invalid-feedback" *ngIf="course.invalid && (course.dirty || course.touched)">
-          Course is required
-        </div>
+        <div class="invalid-feedback" *ngIf="course.invalid && (course.dirty || course.touched)">Course is required</div>
       </div>
-
       <!-- Stream Selection -->
       <div class="input-box" id="streamBox" *ngIf="streams.length > 0">
+        <label>Stream</label>
         <select id="streamSelect" name="stream" [(ngModel)]="registrationObj.stream" #stream="ngModel" required>
           <option value="" disabled selected>Choose Your Stream</option>
           <option *ngFor="let stream of streams" [value]="stream">{{ stream }}</option>
         </select>
-        <label>Stream</label>
-        <div class="invalid-feedback" *ngIf="stream.invalid && (stream.dirty || stream.touched)">
-          Stream is required
-        </div>
+        <div class="invalid-feedback" *ngIf="stream.invalid && (stream.dirty || stream.touched)">Stream is required</div>
       </div>
-
       <!-- Semester Selection -->
       <div class="input-box">
+        <label>Semester</label>
         <select name="semester" [(ngModel)]="registrationObj.semester" #semester="ngModel" required>
           <option value="" disabled selected>Choose Your Semester</option>
           <option value="Semester 1">Semester 1</option>
@@ -114,34 +95,26 @@
           <option value="Semester 7">Semester 7</option>
           <option value="Semester 8">Semester 8</option>
         </select>
-        <label>Semester</label>
-        <div class="invalid-feedback" *ngIf="semester.invalid && (semester.dirty || semester.touched)">
-          Semester is required
-        </div>
+        <div class="invalid-feedback" *ngIf="semester.invalid && (semester.dirty || semester.touched)">Semester is required</div>
       </div>
-
       <!-- Student Photo Upload -->
       <div class="input-box">
         <label for="student-photo">Student Photo</label>
         <input type="file" id="student-photo" (change)="onFileSelect($event, 'studentPhoto')" required>
-        <div class="invalid-feedback" *ngIf="studentPhoto === null">
-          Student Photo is required
-        </div>
+        <div class="invalid-feedback" *ngIf="studentPhoto === null">Student Photo is required</div>
       </div>
-
       <!-- Additional Document Upload -->
       <div class="input-box">
         <label for="additional-doc">Additional Document</label>
         <input type="file" id="additional-doc" (change)="onFileSelect($event, 'additionalDocument')" required>
-        <div class="invalid-feedback" *ngIf="additionalDocument === null">
-          Additional Document is required
-        </div>
+        <div class="invalid-feedback" *ngIf="additionalDocument === null">Additional Document is required</div>
       </div>
-
       <!-- Submit Button -->
-      <button class="btn" type="submit" [disabled]="!registrationForm.form.valid">Submit</button>
+      <button class="btn" type="submit">Submit</button>
     </form>
   </div>
 </div>
 </body>
 </html>
+
+

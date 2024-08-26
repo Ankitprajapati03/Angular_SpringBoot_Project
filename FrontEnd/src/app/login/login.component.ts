@@ -36,6 +36,7 @@ export class LoginComponent implements OnInit {
   };
   isEditing: boolean = false;
   streams: string[] = [];
+  errorMessageName: string = '';
   private apiUrl = 'http://localhost:8080/api/students';
 
   constructor(private http: HttpClient) {}
@@ -104,21 +105,24 @@ export class LoginComponent implements OnInit {
 
   // Save updated student record
   saveStudent() {
-    if (this.selectedStudent) {
-      const updatedStudent = { ...this.selectedStudent };
-      this.http.put<Student>(`${this.apiUrl}/${updatedStudent.rollNumber}`, updatedStudent).subscribe(
-        () => {
-          this.isEditing = false;
-          alert('Student record updated successfully');
-          window.location.reload();
-        },
-        (error) => {
-          console.error('Error updating student:', error);
-          alert('Failed to update student. Please check the input and try again.');
-        }
-      );
+    if (this.validateForm()) {
+      if (this.selectedStudent) {
+        const updatedStudent = { ...this.selectedStudent };
+        this.http.put<Student>(`${this.apiUrl}/${updatedStudent.rollNumber}`, updatedStudent).subscribe(
+          () => {
+            this.isEditing = false;
+            alert('Student record updated successfully');
+            window.location.reload();
+          },
+          (error) => {
+            console.error('Error updating student:', error);
+            alert('Failed to update student. Please check the input and try again.');
+          }
+        );
+      }
     }
   }
+
 
   // Delete student record from database
   deleteStudent(rollNumber: string) {
@@ -185,4 +189,57 @@ export class LoginComponent implements OnInit {
       this.errorMessage = '';
     }
   }
+//Validation logic for name
+  validateName() {
+    const name = this.selectedStudent.name?.trim();
+    const namePattern = /^[a-zA-Z\s]*$/;
+
+    if (!name) {
+      this.errorMessageName = 'Name is required.';
+    } else if (!namePattern.test(name)) {
+      if (/\d/.test(name)) {
+        this.errorMessageName = 'Numbers are not allowed.';
+      } else {
+        this.errorMessageName = 'Special characters are not allowed.';
+      }
+    } else if (name.length < 2) {
+      this.errorMessageName = 'Name must be at least 2 characters long.';
+    } else if (name.length > 100) {
+      this.errorMessageName = 'Name can be a maximum of 100 characters long.';
+    } else {
+      this.errorMessageName = '';
+    }
+  }
+
+//Validation logic for age
+  validateAge() {
+    const age = this.selectedStudent.age;
+   if (!age) {
+       this.errorMessage = 'Age is required';
+     } else if (age < 16) {
+      this.errorMessage = 'Minimum Age for Registration is 16';
+    } else if (age > 24) {
+      this.errorMessage = 'Maximum Age for Registration is 24';
+    } else {
+      this.errorMessage = '';
+    }
+  }
+// Validate form for alert message
+validateForm(): boolean {
+  this.validateAge();
+  this.validateName();
+
+  if (this.errorMessage || this.errorMessageName) {
+    return false;
+  }
+
+  // Check if required fields are filled out or not if not throw an error message
+  if (!this.selectedStudent.name || !this.selectedStudent.age || !this.selectedStudent.gender ||
+      !this.selectedStudent.rollNumber || !this.selectedStudent.course ||
+      !this.selectedStudent.semester || !this.selectedStudent.stream) {
+    window.alert('Please fill out all required fields.');
+    return false;
+  }
+  return true;
+}
 }
