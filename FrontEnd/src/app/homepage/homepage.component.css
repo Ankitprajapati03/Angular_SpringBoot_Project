@@ -120,7 +120,7 @@ html {
         opacity: 0.95;
     }
 
-    .navbar-container input[type="checkbox"] {
+    .navbar-container input {
         display: block;
         position: absolute;
         height: 32px;
