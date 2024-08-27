@@ -14,7 +14,7 @@ html, body {
 .left {
     height: 700px;
     background-repeat: no-repeat;
-    margin: 0 auto;
+    margin-top: 28px;
 }
 
 .col-md-6 {
