@@ -141,7 +141,7 @@ constructor(private http: HttpClient) {}
       this.errorMessageRollNumber = 'Special Character are not allowed.';
     }
   else if (rollNumber.length > 20) {
-      this.errorMessageRollNumber = 'Roll Number can be maximum 100 characters long.';
+      this.errorMessageRollNumber = 'Roll Number can be maximum 20 characters long.';
     }
    else {
     this.errorMessageRollNumber = '';
