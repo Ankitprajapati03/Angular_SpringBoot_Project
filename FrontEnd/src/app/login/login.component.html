@@ -20,6 +20,9 @@
   </div>
   <!-- Display Student Records -->
   <div *ngFor="let student of filteredStudents" class="student-card">
+    <div class="student-photo">
+      <img [src]="student.studentPhotoUrl">
+    </div>
     <div class="student-info">
       <div class="info">
         <p><strong>Registration ID: </strong> {{ student.id }}</p>
