@@ -69,72 +69,110 @@ body {
 .search-bar button:hover {
   background-color: #007a6d;
 }
-
 .student-card {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #ddd;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  background: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.student-card-header {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 20px;
 }
 .student-photo {
-  margin-right: 20px;
+    flex: 1;
+    background-color: #f4f4f4;
+    border-radius: 15px;
+    border-right: 3px solid #009988;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 5px;
+    max-height: 200px;
 }
 
 .student-photo img {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
 }
 
-.student-info {
+.student-details {
+    flex: 2;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.details-left,
+.details-right {
+    flex: 1;
+    padding: 0 15px;
+}
+.details-left p,
+.details-right p {
+    margin: 10px 0px;
+    font-size: 1rem;
+    color: #333;
+    letter-spacing: .4px;
+}
+.details-left strong,
+.details-right strong {
+    color: #333;
+    letter-spacing: .5px;
+}
+
+.student-card-footer {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.student-info p {
-  margin: 10px 0;
-  font-size: 1rem;
-  line-height: 1.6;
+  justify-content: center;
+  margin-top: 15px;
+  width: 100%;
 }
 
 .actions {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 15px;
   gap: 10px;
+  justify-content: center;
+  width: 100%;
 }
 
-.actions button {
-  padding: 8px 16px;
-  font-size: 1rem;
+.btn {
+  padding: 8px 15px;
+  width: 30%;
+  font-size: .9rem;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.actions button:nth-child(1) {
-  background-color: #009988;
+.btn-update {
+    background-color: #009988;
 }
-
-.actions button:nth-child(1):hover {
-  background-color: #007a6d;
+.btn-update:hover {
+    background-color: #007a6d;
 }
-
-.actions button:nth-child(2) {
-  background-color: #e74c3c;
+.btn-delete {
+    background-color: #e74c3c;
 }
-
-.actions button:nth-child(2):hover {
-  background-color: #c0392b;
+.btn-delete:hover {
+    background-color: #c0392b;
 }
-
+.btn-download {
+    background-color: #3498db;
+}
+.btn-download:hover {
+    background-color: #2980b9;
+}
 .edit-form {
   margin-top: 20px;
   padding: 20px;
@@ -143,25 +181,21 @@ body {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
-
 .edit-form h2 {
   margin-bottom: 20px;
   font-size: 1.5rem;
   color: #333;
 }
-
 .edit-form form {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
-
 .edit-form label {
   font-size: 1rem;
   color: #666;
   margin-bottom: 5px;
 }
-
 .edit-form input,
 .edit-form select {
   padding: 10px;
@@ -171,35 +205,29 @@ body {
   outline: none;
   transition: border-color 0.3s ease;
 }
-
 .edit-form input:focus,
 .edit-form select:focus {
   border-color: #009988;
 }
-
 .gender-options {
   display: flex;
   gap: 20px;
   align-items: center;
 }
-
 .gender-options label {
   display: flex;
   align-items: center;
   font-size: 1rem;
   color: #333;
 }
-
 .gender-options input[type="radio"] {
   margin-right: 8px;
 }
-
 .form-actions {
   display: flex;
   justify-content: space-between;
   gap: 10px;
 }
-
 .form-actions button {
   padding: 10px 20px;
   font-size: 1rem;
@@ -209,11 +237,9 @@ body {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-
 .form-actions button:nth-child(1) {
   background-color: #e74c3c;
 }
-
 .form-actions button:nth-child(1):hover {
   background-color: #c0392b;
 }
@@ -230,4 +256,7 @@ margin-top: -17px;
 }
 .error-message{
 color: red;
+font-family: 'Ubuntu', sans-serif;
+font-size: 14px;
 }
+

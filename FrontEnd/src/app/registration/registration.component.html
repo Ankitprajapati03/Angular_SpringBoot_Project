@@ -101,13 +101,13 @@
       <div class="input-box">
         <label for="student-photo">Student Photo</label>
         <input type="file" id="student-photo" (change)="onFileSelect($event, 'studentPhoto')" required>
-        <div class="invalid-feedback" *ngIf="studentPhoto === null">Student Photo is required</div>
+        <div class="error-message" *ngIf="errorMessageFile">{{ errorMessageFile }}</div>
       </div>
       <!-- Additional Document Upload -->
       <div class="input-box">
         <label for="additional-doc">Additional Document</label>
         <input type="file" id="additional-doc" (change)="onFileSelect($event, 'additionalDocument')" required>
-        <div class="invalid-feedback" *ngIf="additionalDocument === null">Additional Document is required</div>
+        <div class="error-message" *ngIf="errorMessageAdditionalDocument">{{ errorMessageAdditionalDocument }}</div>
       </div>
       <!-- Submit Button -->
       <button class="btn" type="submit">Submit</button>

@@ -37,6 +37,8 @@ body {
 }
 .error-message{
 color: red;
+font-family: 'Ubuntu', sans-serif;
+font-size: 14px;
 }
 .logo {
   margin-top: 10px;

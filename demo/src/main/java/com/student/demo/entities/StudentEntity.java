@@ -22,10 +22,33 @@ public class StudentEntity {
  private String course;
  private String semester;
  private String stream;
+ // Store the Base64-encoded image as a string
 
- @Column(name = "studentPhoto")
+
+ @Column(name = "studentPhoto",length = 7000000)
  private String studentPhoto;
 
- @Column(name = "additionalDocument")
+ @Column(name = "additionalDocument",length = 7000000)
  private String additionalDocument;
+
+
+
+
+ // Getters and setters.
+
+ public String getStudentPhotoBase64() {
+  return studentPhoto;
+ }
+
+ public void setStudentPhotoBase64(String studentPhotoBase64) {
+  this.studentPhoto = studentPhotoBase64;
+ }
+
+ public String getAdditionalDocumentBase64() {
+  return additionalDocument;
+ }
+
+ public void setAdditionalDocumentBase64(String additionalDocumentBase64) {
+  this.additionalDocument = additionalDocumentBase64;
+ }
 }

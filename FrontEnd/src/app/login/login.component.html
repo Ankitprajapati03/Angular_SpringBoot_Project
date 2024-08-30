@@ -16,33 +16,37 @@
     <button (click)="loadAllStudents()">Student List</button>
   </div>
   <div class="search-validation">
-  <p *ngIf="errorMessage" class="error-message" >{{ errorMessage }}</p>
+    <p *ngIf="errorMessage" class="error-message" >{{ errorMessage }}</p>
   </div>
   <!-- Display Student Records -->
   <div *ngFor="let student of filteredStudents" class="student-card">
-    <div class="student-photo">
-      <img [src]="student.studentPhotoUrl">
-    </div>
-    <div class="student-info">
-      <div class="info">
-        <p><strong>Registration ID: </strong> {{ student.id }}</p>
-        <p><strong> Name: </strong> {{ student.name }}</p>
-        <p><strong>Age: </strong> {{ student.age }}</p>
-        <p><strong>Gender: </strong> {{ student.gender }}</p>
-        <p><strong>Course: </strong> {{ student.course }}</p>
-        <p><strong>Stream: </strong> {{ student.stream }}</p>
-        <p><strong>Semester: </strong> {{ student.semester }}</p>
-        <p><strong>Roll Number: </strong> {{ student.rollNumber }}</p>
+    <div class="student-card-header">
+      <div class="student-photo">
+        <img [src]="student.studentPhotoUrl" alt="Student Photo">
+      </div>
+      <div class="student-details">
+        <div class="details-left">
+          <p><strong>Name:</strong> {{ student.name }}</p>
+          <p><strong>Age:</strong> {{ student.age }}</p>
+          <p><strong>Gender:</strong> {{ student.gender }}</p>
+          <p><strong>Roll Number:</strong> {{ student.rollNumber }}</p>
+        </div>
+        <div class="details-right">
+          <p><strong>Course:</strong> {{ student.course }}</p>
+          <p><strong>Stream:</strong> {{ student.stream }}</p>
+          <p><strong>Semester:</strong> {{ student.semester }}</p>
+          <p><strong>Registration ID:</strong> {{ student.id }}</p>
+        </div>
+        <div class="student-card-footer">
+          <div class="actions">
+            <button (click)="editStudent(student)" class="btn btn-update">Update</button>
+            <button (click)="deleteStudent(student.rollNumber)" class="btn btn-delete">Delete</button>
+            <button (click)="downloadStudentImage(student)" class="btn btn-download">Download</button>
+          </div>
+        </div>
       </div>
     </div>
-
-    <!-- Action Buttons -->
-    <div class="actions">
-      <button (click)="editStudent(student)">Update</button>
-      <button (click)="deleteStudent(student.rollNumber)">Delete</button>
-    </div>
   </div>
-
   <!-- Edit Form -->
   <div *ngIf="isEditing" class="edit-form">
     <h2>Edit Student Details</h2>

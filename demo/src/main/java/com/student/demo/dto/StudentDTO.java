@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 import java.time.LocalDate;
 
 @Data
@@ -22,6 +23,25 @@ public class StudentDTO {
     private String course;
     private String semester;
     private String stream;
+
     private String studentPhoto;
     private String additionalDocument;
+
+
+
+    public String getStudentPhotoBase64() {
+        return studentPhoto;
+    }
+
+    public void setStudentPhotoBase64(String studentPhotoBase64) {
+        this.studentPhoto = studentPhotoBase64;
+    }
+
+    public String getAdditionalDocumentBase64() {
+        return additionalDocument;
+    }
+
+    public void setAdditionalDocumentBase64(String additionalDocumentBase64) {
+        this.additionalDocument = additionalDocumentBase64;
+    }
 }

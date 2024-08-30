@@ -19,7 +19,7 @@ public class StudentController {
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
-//Registration form data submission
+    //Registration form data submission
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<StudentDTO> createNewStudent(
             @RequestParam("name") String name,
@@ -30,7 +30,7 @@ public class StudentController {
             @RequestParam("semester") String semester,
             @RequestParam("stream") String stream,
             @RequestParam("studentPhoto") MultipartFile studentPhoto,
-            @RequestParam("additionalDocument") MultipartFile additionalDocument) {
+            @RequestParam(value = "additionalDocument", required = false) MultipartFile additionalDocument) {
 
         try {
             StudentDTO studentDTO = new StudentDTO();
@@ -48,17 +48,19 @@ public class StudentController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-//Fetching student record on UI
+    //Fetching student record on UI
     @GetMapping
     public List<StudentDTO> getAllStudents() {
         return studentService.getAllStudents();
     }
-//Searching individual student record by id
+    //Searching individual student record by id
     @GetMapping("/{id}")
     public StudentDTO getStudentById(@PathVariable("id") Long studentId) {
-        return studentService.getStudentById(studentId);
+        StudentDTO studentDTO = studentService.getStudentById(studentId);
+
+        return studentDTO;
     }
-//Deleting individual student record
+    //Deleting individual student record
     @DeleteMapping("/{rollNumber}")
     public ResponseEntity<Void> deleteStudent(@PathVariable String rollNumber) {
         try {
@@ -68,7 +70,7 @@ public class StudentController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-//Updating individual student record
+    //Updating individual student record
     @PutMapping("/{rollNumber}")
     public ResponseEntity<StudentDTO> updateStudentByRollNumber(
             @PathVariable("rollNumber") String rollNumber,
